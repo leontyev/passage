@@ -1,8 +1,12 @@
-import { LocationCard } from './components/LocationCard';
+import { createFileRoute } from '@tanstack/react-router';
+import { LocationCard } from '../components/LocationCard';
 
-function App() {
+export const Route = createFileRoute('/')({
+  component: Index,
+});
+
+function Index() {
   return (
-    // Use a light gray background to make the white card pop
     <div className="bg-slate-100 min-h-screen flex items-center justify-center p-8">
       <LocationCard
         name="Annecy"
@@ -12,5 +16,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
