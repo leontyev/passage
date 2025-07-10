@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { LocationCard } from '../components/LocationCard';
 
 export const Route = createFileRoute('/')({
@@ -7,12 +7,21 @@ export const Route = createFileRoute('/')({
 
 function Index() {
   return (
-    <div className="bg-slate-100 min-h-screen flex items-center justify-center p-8">
-      <LocationCard
-        name="Annecy"
-        country="France"
-        imageUrl="/annecy-view.jpg" // Make sure you have this image in /public
-      />
+    <div className="bg-slate-100 min-h-screen flex items-center justify-center p-8 gap-8">
+      <Link to="/locations/$locationId" params={{ locationId: 'annecy' }}>
+        <LocationCard
+          name="Annecy"
+          country="France"
+          imageUrl="/annecy-view.jpg"
+        />
+      </Link>
+      <Link to="/locations/$locationId" params={{ locationId: 'trento' }}>
+        <LocationCard
+          name="Trento"
+          country="Italy"
+          imageUrl="/trento-view.jpg"
+        />
+      </Link>
     </div>
   );
 }
