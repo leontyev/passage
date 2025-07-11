@@ -38,8 +38,8 @@ export function renderForTest(
     }),
   });
 
-  // The wrapper that provides all the necessary context
-  const Wrapper = ({ children }: { children: React.ReactNode }) => (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const Wrapper = ({ children: _children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
     </QueryClientProvider>
