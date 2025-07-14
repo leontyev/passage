@@ -1,14 +1,15 @@
+// src/components/Layout.tsx
+
 import { Outlet } from '@tanstack/react-router';
 import { Header } from './Header';
 
 export function Layout() {
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="flex flex-col h-screen bg-slate-100">
       <Header />
-      <main>
+      <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>
-      {/* We could add a Footer component here later */}
     </div>
   );
 }
