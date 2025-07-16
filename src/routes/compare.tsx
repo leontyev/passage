@@ -60,7 +60,10 @@ function Compare() {
       </p>
 
       {/* --- LEGEND --- */}
-      <div className="flex flex-wrap gap-x-6 gap-y-2 mb-8">
+      <div
+        data-testid="location-legend"
+        className="flex flex-wrap gap-x-6 gap-y-2 mb-8"
+      >
         {data?.map((d, i) => (
           <div key={d.locationId} className="flex items-center gap-2">
             <div
