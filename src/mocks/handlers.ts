@@ -26,6 +26,14 @@ const analyticsData: LocationAnalytics[] = [
     costOfLivingIndex: 78.9,
     internetSpeedMbs: 680,
   },
+  {
+    locationId: 'lucerne',
+    locationName: 'Lucerne',
+    monthlyTemperature: [-2, -1, 3, 7, 12, 16, 18, 17, 13, 8, 2, -1],
+    monthlySunnyDays: [3, 5, 8, 11, 13, 15, 17, 16, 13, 9, 4, 2],
+    costOfLivingIndex: 115.2,
+    internetSpeedMbs: 810,
+  },
 ];
 
 export const handlers = [
@@ -47,6 +55,16 @@ export const handlers = [
       description:
         'A historic city nestled in the heart of the Dolomites, a paradise for cyclists.',
       skiReport: 'Excellent conditions for ski touring.',
+    });
+  }),
+  http.get('/api/locations/lucerne', () => {
+    return HttpResponse.json({
+      id: 'lucerne',
+      name: 'Lucerne',
+      country: 'Switzerland',
+      description:
+        'A stunning city on a lake, surrounded by mountains, offering a blend of urban life and dramatic nature.',
+      skiReport: 'Engelberg and Titlis are just a short train ride away.',
     });
   }),
   http.get('/api/analytics', () => {
