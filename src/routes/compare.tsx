@@ -2,15 +2,18 @@
 
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
-import { type LocationAnalytics } from '../mocks/handlers'; // Note: Move this to a dedicated types file in a real app
-import { LocationAnalyticsCard } from '../components/LocationAnalyticsCard'; // <-- IMPORT THE CARD
 import { useMemo } from 'react';
+import { type LocationAnalytics } from '../mocks/handlers';
+import { MultiLineChart } from '../components/MultiLineChart';
+import { ComparisonBar } from '../components/ComparisonBar';
 
 async function fetchAnalytics(): Promise<LocationAnalytics[]> {
   const res = await fetch('/api/analytics');
   if (!res.ok) throw new Error('Network response was not ok');
   return res.json();
 }
+
+const locationColors = ['#3b82f6', '#f97316', '#14b8a6']; // Blue, Orange, Teal
 
 export const Route = createFileRoute('/compare')({
   component: Compare,
@@ -22,22 +25,21 @@ function Compare() {
     queryFn: fetchAnalytics,
   });
 
-  const scales = useMemo(() => {
-    if (!data) return null;
-
-    // Flatten all temperature and sunny day values into single arrays
-    const allTemperatures = data.flatMap((d) => d.monthlyTemperature);
-    const allSunnyDays = data.flatMap((d) => d.monthlySunnyDays);
-
+  const { tempDataSet, sunnyDataSet, maxCost, maxSpeed } = useMemo(() => {
+    if (!data) return {};
     return {
-      tempScale: {
-        min: Math.min(...allTemperatures),
-        max: Math.max(...allTemperatures),
-      },
-      sunnyScale: {
-        min: Math.min(...allSunnyDays),
-        max: Math.max(...allSunnyDays),
-      },
+      tempDataSet: data.map((d, i) => ({
+        data: d.monthlyTemperature,
+        color: locationColors[i],
+        label: d.locationName,
+      })),
+      sunnyDataSet: data.map((d, i) => ({
+        data: d.monthlySunnyDays,
+        color: locationColors[i],
+        label: d.locationName,
+      })),
+      maxCost: Math.max(...data.map((d) => d.costOfLivingIndex)),
+      maxSpeed: Math.max(...data.map((d) => d.internetSpeedMbs)),
     };
   }, [data]);
 
@@ -47,7 +49,6 @@ function Compare() {
     return (
       <div className="p-8 text-center text-red-600">An error occurred.</div>
     );
-  if (!scales) return null;
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
@@ -55,19 +56,90 @@ function Compare() {
         Location Comparison
       </h1>
       <p className="text-lg text-gray-600 mb-8">
-        An information-dense view inspired by Edward Tufte's "small multiples".
+        Direct comparison using superposition and scaled bars.
       </p>
 
-      {/* The container for our small multiples grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {data?.map((locationData) => (
-          <LocationAnalyticsCard
-            key={locationData.locationId}
-            data={locationData}
-            tempScale={scales.tempScale}
-            sunnyScale={scales.sunnyScale}
-          />
+      {/* --- LEGEND --- */}
+      <div className="flex flex-wrap gap-x-6 gap-y-2 mb-8">
+        {data?.map((d, i) => (
+          <div key={d.locationId} className="flex items-center gap-2">
+            <div
+              className="w-4 h-4 rounded-full"
+              style={{ backgroundColor: locationColors[i] }}
+            />
+            <span className="font-semibold">{d.locationName}</span>
+          </div>
         ))}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* --- SUPERPOSED CHART 1: TEMPERATURE --- */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Avg. Monthly Temperature (°C)
+          </h2>
+          <div className="h-64">
+            {tempDataSet && <MultiLineChart datasets={tempDataSet} />}
+          </div>
+        </div>
+
+        {/* --- SUPERPOSED CHART 2: SUNNY DAYS --- */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Sunny Days / Month
+          </h2>
+          <div className="h-64">
+            {sunnyDataSet && <MultiLineChart datasets={sunnyDataSet} />}
+          </div>
+        </div>
+
+        {/* --- SCALED BARS 1: COST OF LIVING --- */}
+        <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
+          <h2 className="text-2xl font-bold text-gray-800">
+            Cost of Living Index
+          </h2>
+          {data?.map((d, i) => (
+            <div key={d.locationId}>
+              <div className="flex justify-between items-baseline mb-1">
+                <span className="font-medium text-gray-700">
+                  {d.locationName}
+                </span>
+                <span className="font-bold text-gray-900">
+                  {d.costOfLivingIndex}
+                </span>
+              </div>
+              <ComparisonBar
+                value={d.costOfLivingIndex}
+                maxValue={maxCost!}
+                barColor={locationColors[i]}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* --- SCALED BARS 2: INTERNET SPEED --- */}
+        <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
+          <h2 className="text-2xl font-bold text-gray-800">
+            Internet Speed (Mbps)
+          </h2>
+          {data?.map((d, i) => (
+            <div key={d.locationId}>
+              <div className="flex justify-between items-baseline mb-1">
+                <span className="font-medium text-gray-700">
+                  {d.locationName}
+                </span>
+                <span className="font-bold text-gray-900">
+                  {d.internetSpeedMbs}
+                </span>
+              </div>
+              <ComparisonBar
+                value={d.internetSpeedMbs}
+                maxValue={maxSpeed!}
+                barColor={locationColors[i]}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
