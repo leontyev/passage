@@ -1,5 +1,33 @@
 import { http, HttpResponse } from 'msw';
 
+export interface LocationAnalytics {
+  locationId: string;
+  locationName: string;
+  monthlyTemperature: number[]; // 12 months, Celsius
+  monthlySunnyDays: number[]; // 12 months
+  costOfLivingIndex: number; // Compared to a baseline
+  internetSpeedMbs: number;
+}
+
+const analyticsData: LocationAnalytics[] = [
+  {
+    locationId: 'annecy',
+    locationName: 'Annecy',
+    monthlyTemperature: [-1, 1, 5, 9, 14, 18, 20, 19, 15, 10, 4, 0],
+    monthlySunnyDays: [5, 7, 10, 12, 15, 18, 20, 18, 15, 11, 6, 4],
+    costOfLivingIndex: 85.4,
+    internetSpeedMbs: 750,
+  },
+  {
+    locationId: 'trento',
+    locationName: 'Trento',
+    monthlyTemperature: [0, 2, 7, 11, 16, 20, 22, 21, 17, 12, 5, 1],
+    monthlySunnyDays: [6, 8, 11, 13, 16, 19, 22, 20, 16, 12, 7, 5],
+    costOfLivingIndex: 78.9,
+    internetSpeedMbs: 680,
+  },
+];
+
 export const handlers = [
   http.get('/api/locations/annecy', () => {
     return HttpResponse.json({
@@ -20,5 +48,8 @@ export const handlers = [
         'A historic city nestled in the heart of the Dolomites, a paradise for cyclists.',
       skiReport: 'Excellent conditions for ski touring.',
     });
+  }),
+  http.get('/api/analytics', () => {
+    return HttpResponse.json(analyticsData);
   }),
 ];
