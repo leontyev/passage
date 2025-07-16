@@ -5,9 +5,15 @@ import { type LocationAnalytics } from '../mocks/handlers'; // Move type to a ty
 
 interface LocationAnalyticsCardProps {
   data: LocationAnalytics;
+  tempScale: { min: number; max: number };
+  sunnyScale: { min: number; max: number };
 }
 
-export function LocationAnalyticsCard({ data }: LocationAnalyticsCardProps) {
+export function LocationAnalyticsCard({
+  data,
+  tempScale,
+  sunnyScale,
+}: LocationAnalyticsCardProps) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 transition-shadow hover:shadow-lg">
       <h2 className="text-3xl font-bold text-gray-800 mb-4">
@@ -20,14 +26,22 @@ export function LocationAnalyticsCard({ data }: LocationAnalyticsCardProps) {
             Avg. Monthly Temp (°C)
           </h3>
           <div className="h-16 mt-2 text-blue-500">
-            <Sparkline data={data.monthlyTemperature} />
+            <Sparkline
+              data={data.monthlyTemperature}
+              globalMin={tempScale.min}
+              globalMax={tempScale.max}
+            />
           </div>
         </div>
 
         <div>
           <h3 className="font-semibold text-gray-700">Sunny Days / Month</h3>
           <div className="h-16 mt-2 text-yellow-500">
-            <Sparkline data={data.monthlySunnyDays} />
+            <Sparkline
+              data={data.monthlySunnyDays}
+              globalMin={sunnyScale.min}
+              globalMax={sunnyScale.max}
+            />
           </div>
         </div>
 

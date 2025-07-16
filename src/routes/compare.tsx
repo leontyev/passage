@@ -4,6 +4,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { type LocationAnalytics } from '../mocks/handlers'; // Note: Move this to a dedicated types file in a real app
 import { LocationAnalyticsCard } from '../components/LocationAnalyticsCard'; // <-- IMPORT THE CARD
+import { useMemo } from 'react';
 
 async function fetchAnalytics(): Promise<LocationAnalytics[]> {
   const res = await fetch('/api/analytics');
@@ -21,12 +22,32 @@ function Compare() {
     queryFn: fetchAnalytics,
   });
 
+  const scales = useMemo(() => {
+    if (!data) return null;
+
+    // Flatten all temperature and sunny day values into single arrays
+    const allTemperatures = data.flatMap((d) => d.monthlyTemperature);
+    const allSunnyDays = data.flatMap((d) => d.monthlySunnyDays);
+
+    return {
+      tempScale: {
+        min: Math.min(...allTemperatures),
+        max: Math.max(...allTemperatures),
+      },
+      sunnyScale: {
+        min: Math.min(...allSunnyDays),
+        max: Math.max(...allSunnyDays),
+      },
+    };
+  }, [data]);
+
   if (isLoading)
     return <div className="p-8 text-center">Loading comparison data...</div>;
   if (isError)
     return (
       <div className="p-8 text-center text-red-600">An error occurred.</div>
     );
+  if (!scales) return null;
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
@@ -43,6 +64,8 @@ function Compare() {
           <LocationAnalyticsCard
             key={locationData.locationId}
             data={locationData}
+            tempScale={scales.tempScale}
+            sunnyScale={scales.sunnyScale}
           />
         ))}
       </div>

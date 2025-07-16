@@ -1,17 +1,21 @@
 // src/components/Sparkline.tsx
 
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import { useState, useRef, useLayoutEffect } from 'react';
 
 type SparklineProps = {
   data: number[];
   strokeColor?: string;
   strokeWidth?: number;
+  globalMin?: number;
+  globalMax?: number;
 };
 
 export function Sparkline({
   data,
   strokeColor = 'currentColor',
   strokeWidth = 2,
+  globalMin,
+  globalMax,
 }: SparklineProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [viewBox, setViewBox] = useState({ width: 0, height: 0 });
@@ -26,8 +30,8 @@ export function Sparkline({
 
   if (!data || data.length < 2) return null;
 
-  const min = Math.min(...data);
-  const max = Math.max(...data);
+  const min = globalMin ?? Math.min(...data);
+  const max = globalMax ?? Math.max(...data);
   const range = max - min;
 
   const points = data
