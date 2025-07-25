@@ -1,17 +1,10 @@
 // src/routes/compare.tsx
 
 import { createFileRoute } from '@tanstack/react-router';
-import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { type LocationAnalytics } from '../mocks/handlers';
 import { MultiLineChart } from '../components/MultiLineChart';
 import { ComparisonBar } from '../components/ComparisonBar';
-
-async function fetchAnalytics(): Promise<LocationAnalytics[]> {
-  const res = await fetch('/api/analytics');
-  if (!res.ok) throw new Error('Network response was not ok');
-  return res.json();
-}
+import { useAnalyticsData } from '../hooks/useAnalyticsData';
 
 const locationColors = ['#3b82f6', '#f97316', '#14b8a6']; // Blue, Orange, Teal
 
@@ -20,10 +13,7 @@ export const Route = createFileRoute('/compare')({
 });
 
 function Compare() {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['analytics'],
-    queryFn: fetchAnalytics,
-  });
+  const { data, isLoading, isError } = useAnalyticsData();
 
   const { tempDataSet, sunnyDataSet, maxCost, maxSpeed } = useMemo(() => {
     if (!data) return {};
