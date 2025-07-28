@@ -13,7 +13,7 @@ interface LocationData {
 }
 
 async function fetchLocationData(locationId: string): Promise<LocationData> {
-  const res = await fetch(`/api/locations/${locationId}`);
+  const res = await fetch(`/api/location?id=${locationId}`);
   if (!res.ok) throw new Error('Network response was not ok');
   return res.json();
 }
