@@ -39,7 +39,7 @@ const analyticsData: LocationAnalytics[] = [
 ];
 
 export const handlers = [
-  http.get('/api/locations/annecy', () => {
+  http.get('/api/location?id=annecy', () => {
     return HttpResponse.json({
       id: 'annecy',
       name: 'Annecy',
@@ -49,7 +49,7 @@ export const handlers = [
       skiReport: '5cm of fresh powder expected at La Clusaz.',
     });
   }),
-  http.get('/api/locations/trento', () => {
+  http.get('/api/location?id=trento', () => {
     return HttpResponse.json({
       id: 'trento',
       name: 'Trento',
@@ -59,7 +59,7 @@ export const handlers = [
       skiReport: 'Excellent conditions for ski touring.',
     });
   }),
-  http.get('/api/locations/lucerne', () => {
+  http.get('/api/location?id=lucerne', () => {
     return HttpResponse.json({
       id: 'lucerne',
       name: 'Lucerne',
