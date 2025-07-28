@@ -1,6 +1,6 @@
-// api/locations/[locationId].ts
+// api/location.cjs
 
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+const { VercelRequest, VercelResponse } = require('@vercel/node');
 
 const locationsData = {
   annecy: {
@@ -28,16 +28,13 @@ const locationsData = {
   },
 };
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
-  const { locationId } = req.query;
+module.exports = (req, res) => {
+  const { id } = req.query;
 
-  if (
-    typeof locationId !== 'string' ||
-    !locationsData[locationId as keyof typeof locationsData]
-  ) {
-    return res.status(404).json({ error: 'Location not found' });
+  if (typeof id === 'string' && id in locationsData) {
+    const location = locationsData[id];
+    return res.status(200).json(location);
   }
 
-  const location = locationsData[locationId as keyof typeof locationsData];
-  res.status(200).json(location);
-}
+  return res.status(404).json({ error: 'Location not found' });
+};

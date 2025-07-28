@@ -1,13 +1,12 @@
-// api/generate-description.ts
+// api/generate-description.cjs
 
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+const { VercelRequest, VercelResponse } = require('@vercel/node');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
-
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
 const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-lite' });
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).end('Method Not Allowed');
@@ -31,4 +30,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.error('Error calling Google AI:', error);
     res.status(500).json({ error: 'Failed to generate description' });
   }
-}
+};

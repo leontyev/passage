@@ -1,6 +1,6 @@
-// api/get-weather-data.ts
+// api/get-weather-data.cjs
 
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+const { VercelRequest, VercelResponse } = require('@vercel/node');
 
 const locations = {
   annecy: { lat: 45.9, lon: 6.13 },
@@ -8,17 +8,14 @@ const locations = {
   lucerne: { lat: 47.05, lon: 8.3 },
 };
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+module.exports = async (req, res) => {
   const { locationId } = req.query;
 
-  if (
-    typeof locationId !== 'string' ||
-    !locations[locationId as keyof typeof locations]
-  ) {
+  if (typeof locationId !== 'string' || !(locationId in locations)) {
     return res.status(400).json({ error: 'Invalid location ID' });
   }
 
-  const { lat, lon } = locations[locationId as keyof typeof locations];
+  const { lat, lon } = locations[locationId];
 
   const weatherResponse = await fetch(
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max`
@@ -26,4 +23,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const weatherData = await weatherResponse.json();
 
   res.status(200).json(weatherData);
-}
+};
