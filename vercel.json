@@ -1,14 +1,14 @@
 {
-  "rewrites": [
-    { "source": "/api/location", "destination": "/api/location.cjs" },
-    { "source": "/api/analytics", "destination": "/api/analytics.cjs" },
+  "builds": [
     {
-      "source": "/api/generate-description",
-      "destination": "/api/generate-description.cjs"
+      "src": "api/**/*.cjs",
+      "use": "@vercel/node"
     },
     {
-      "source": "/api/get-weather-data",
-      "destination": "/api/get-weather-data.cjs"
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
     }
-  ]
+  ],
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/api/$1" }]
 }
