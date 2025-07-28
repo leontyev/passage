@@ -1,3 +1,5 @@
+// src/test/ComparePage.production.test.tsx
+
 import { renderForTest } from './test-utils';
 import { screen, within } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';

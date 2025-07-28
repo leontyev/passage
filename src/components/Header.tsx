@@ -21,7 +21,6 @@ export function Header() {
           >
             Compare
           </Link>
-          {/* We can add more links here later, like "/about" */}
         </div>
       </nav>
     </header>

@@ -1,4 +1,5 @@
 // api/get-weather-data.ts
+
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const locations = {
