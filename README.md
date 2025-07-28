@@ -15,5 +15,4 @@ React, TypeScript, Vite, TanStack Router & Query, Tailwind CSS, Vitest, MSW.
 
 ## Links
 
-- **Live Demo:** [Link to my Vercel deployment]
-- **Source Code:** [Link to my GitHub repository]
+- **Live Demo:** [passage-pi.vercel.app](https://passage-pi.vercel.app/)
