@@ -1,6 +1,6 @@
-// api/analytics.cjs
+// api/analytics.ts
 
-const { VercelRequest, VercelResponse } = require('@vercel/node');
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const analyticsData = [
   {
@@ -29,6 +29,6 @@ const analyticsData = [
   },
 ];
 
-module.exports = (req, res) => {
+export default function handler(req: VercelRequest, res: VercelResponse) {
   res.status(200).json(analyticsData);
-};
+}
