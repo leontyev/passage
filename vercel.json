@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    { "source": "/api/location", "destination": "/api/location.cjs" },
+    { "source": "/api/analytics", "destination": "/api/analytics.cjs" },
+    {
+      "source": "/api/generate-description",
+      "destination": "/api/generate-description.cjs"
+    },
+    {
+      "source": "/api/get-weather-data",
+      "destination": "/api/get-weather-data.cjs"
+    }
+  ]
+}
